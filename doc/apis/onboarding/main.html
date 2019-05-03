@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>main.py</title>
+  <link rel="stylesheet" href="../../pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>main.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">endpoints</span>
+<span class="kn">from</span> <span class="nn">protorpc</span> <span class="kn">import</span> <span class="n">remote</span>
+<span class="kn">from</span> <span class="nn">endpoints</span> <span class="kn">import</span> <span class="n">message_types</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>task queue</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">google.appengine.api</span> <span class="kn">import</span> <span class="n">taskqueue</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>memecache class</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">service.memcache.cache</span> <span class="kn">import</span> <span class="n">Cache</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">datetime</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>message classes used for api communication</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">message</span> <span class="kn">import</span> <span class="n">loginResponse</span><span class="p">,</span><span class="n">userRegistrationRequest</span><span class="p">,</span>\
+	<span class="n">userRegistrationResponse</span><span class="p">,</span><span class="n">RegisterEmailRequest</span><span class="p">,</span><span class="n">RegisterEmailResponse</span><span class="p">,</span>\
+	<span class="n">ListResponse</span><span class="p">,</span><span class="n">EmailResponse</span><span class="p">,</span><span class="n">AccountResponse</span><span class="p">,</span><span class="n">ClinetsListResponse</span><span class="p">,</span>\
+	<span class="n">AccountListResponse</span><span class="p">,</span><span class="n">FetchAccountLocationsRequest</span><span class="p">,</span><span class="n">FetchLocationResponse</span><span class="p">,</span><span class="n">ConnectAccountRequest</span><span class="p">,</span><span class="n">ConnectAccountResponse</span><span class="p">,</span><span class="n">ConnectedAccountsStatus</span><span class="p">,</span><span class="n">SessionResponse</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>authorised client ids for different platforms</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">settings</span> <span class="kn">import</span> <span class="o">*</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>logging module, logs the output on server logs</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">import</span> <span class="nn">logging</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>ndb </p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">google.appengine.ext</span> <span class="kn">import</span> <span class="n">ndb</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>urlfetch service, sends http request to gbl form app backend 
+to fetch accounts,locations and location insights </p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">service.request.fetch</span> <span class="kn">import</span> <span class="n">FetchGbl</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <p>user modal class manage all users/brands</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">modal.user</span> <span class="kn">import</span> <span class="n">User</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>Registered modal class manage all olv registered emails </p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">modal.registered</span> <span class="kn">import</span> <span class="n">Registered</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      <p>Account modal class manages all gbl connected accounts</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">modal.account</span> <span class="kn">import</span> <span class="n">Account</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>location modal class manages all locations</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">modal.location</span> <span class="kn">import</span> <span class="n">Location</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      <p>insight modal class manages all insights</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">modal.insight</span> <span class="kn">import</span> <span class="n">Insight</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>address modal class manages all location address</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">modal.address</span> <span class="kn">import</span> <span class="n">Address</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      <p>status modal class</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">modal.status</span> <span class="kn">import</span> <span class="n">Status</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>meta and Category modal class</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">modal.meta</span> <span class="kn">import</span> <span class="n">Meta</span><span class="p">,</span><span class="n">Category</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      <p>api collection decorator cloud endpoint 2.0</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="n">onboarding_api_collection</span> <span class="o">=</span> <span class="n">endpoints</span><span class="o">.</span><span class="n">api</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;onboarding&#39;</span><span class="p">,</span>
+							<span class="n">version</span><span class="o">=</span><span class="s1">&#39;v2.0&#39;</span><span class="p">,</span>
+							<span class="n">allowed_client_ids</span><span class="o">=</span><span class="p">[</span><span class="n">WEB_CLIENT_ID</span><span class="p">,</span> <span class="n">ANDROID_CLIENT_ID</span><span class="p">],</span>
+							<span class="n">audiences</span><span class="o">=</span><span class="p">[</span><span class="n">WEB_CLIENT_ID</span><span class="p">],</span>
+							<span class="n">scopes</span><span class="o">=</span><span class="p">[</span><span class="n">endpoints</span><span class="o">.</span><span class="n">EMAIL_SCOPE</span><span class="p">])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <p>endpoint 2.0 class hnadles all incoming api requests for onboarding user on OlV dashboard</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@onboarding_api_collection.api_class</span><span class="p">(</span><span class="n">resource_name</span><span class="o">=</span><span class="s1">&#39;onboarding&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Onboarding</span><span class="p">(</span><span class="n">remote</span><span class="o">.</span><span class="n">Service</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      <p>check if user is authorized to access dashboard</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="nd">@endpoints.method</span><span class="p">(</span><span class="n">message_types</span><span class="o">.</span><span class="n">VoidMessage</span><span class="p">,</span><span class="n">loginResponse</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;/login&#39;</span><span class="p">,</span><span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;GET&#39;</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">request</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      <p>get current logged in user</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">current_user</span> <span class="o">=</span> <span class="n">endpoints</span><span class="o">.</span><span class="n">get_current_user</span><span class="p">()</span><span class="o">.</span><span class="n">email</span><span class="p">()</span>
+		<span class="k">try</span><span class="p">:</span>  <span class="c1"># lets have a try except for error handling</span>
+			<span class="k">if</span> <span class="n">current_user</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-20'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-20'>#</a>
+      </div>
+      <p>get user entity form user modal</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>				<span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">current_user</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+				<span class="k">if</span> <span class="n">user</span><span class="p">:</span>
+					<span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">assigned_email</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-21'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-21'>#</a>
+      </div>
+      <p>create session
+currently using memechace to handle session , need to change it</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>						<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">_Message__unrecognized_fields</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;access_token&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-22'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-22'>#</a>
+      </div>
+      <p>saving/creating session</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>						<span class="n">Cache</span><span class="p">()</span><span class="o">.</span><span class="n">create_user_session</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span><span class="n">request</span><span class="o">.</span><span class="n">_Message__unrecognized_fields</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;access_token&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-23'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-23'>#</a>
+      </div>
+      <p>return login response</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>						<span class="k">return</span> <span class="n">loginResponse</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span><span class="n">last_name</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span><span class="n">first_name</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span><span class="n">picture_url</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">picture_url</span><span class="p">,</span> <span class="n">mobile</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">connected</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">connected</span><span class="p">,</span><span class="n">demo</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">demo</span><span class="p">,</span><span class="n">assigned_email</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">assigned_email</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">email</span><span class="p">)</span>
+					<span class="k">else</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-24'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-24'>#</a>
+      </div>
+      <p>return the data</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>						<span class="k">return</span> <span class="n">loginResponse</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span><span class="n">last_name</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span><span class="n">first_name</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span><span class="n">picture_url</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">picture_url</span><span class="p">,</span> <span class="n">mobile</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">connected</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">connected</span><span class="p">,</span><span class="n">demo</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">demo</span><span class="p">)</span>
+				<span class="k">else</span><span class="p">:</span>
+					<span class="k">raise</span> <span class="n">endpoints</span><span class="o">.</span><span class="n">UnauthorizedException</span><span class="p">(</span><span class="s1">&#39;Invalid User&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">current_user</span><span class="p">))</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="k">raise</span> <span class="n">endpoints</span><span class="o">.</span><span class="n">UnauthorizedException</span><span class="p">(</span><span class="s1">&#39;Authentication Error&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">current_user</span><span class="p">))</span>
+		<span class="k">except</span> <span class="p">(</span><span class="ne">IndexError</span><span class="p">,</span><span class="ne">TypeError</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="n">endpoints</span><span class="o">.</span><span class="n">NotFoundException</span><span class="p">(</span><span class="s2">&quot;Oauth email auth authorization failed&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-25'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-25'>#</a>
+      </div>
+      <p>assign demo olv account to user</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="nd">@endpoints.method</span><span class="p">(</span><span class="n">message_types</span><span class="o">.</span><span class="n">VoidMessage</span><span class="p">,</span><span class="n">loginResponse</span><span class="p">,</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;/demo_run&#39;</span><span class="p">,</span><span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;GET&#39;</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">demo_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">request</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-26'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-26'>#</a>
+      </div>
+      <p>connect demo olv account to user</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">current_user</span> <span class="o">=</span> <span class="n">endpoints</span><span class="o">.</span><span class="n">get_current_user</span><span class="p">()</span><span class="o">.</span><span class="n">email</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-27'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-27'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">()</span><span class="o">.</span><span class="n">assign_demo_account</span><span class="p">(</span><span class="n">current_user</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+		<span class="k">return</span> <span class="n">loginResponse</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span><span class="n">last_name</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span>\
+			<span class="n">first_name</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span><span class="n">picture_url</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">picture_url</span><span class="p">,</span>\
+			<span class="n">mobile</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">connected</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">connected</span><span class="p">,</span><span class="n">assigned_email</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">assigned_email</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">email</span><span class="p">,</span><span class="n">demo</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">demo</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-28'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-28'>#</a>
+      </div>
+      <p>api request to register user</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="nd">@endpoints.method</span><span class="p">(</span><span class="n">userRegistrationRequest</span><span class="p">,</span><span class="n">userRegistrationResponse</span><span class="p">,</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;/register&#39;</span><span class="p">,</span><span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;POST&#39;</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">request</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-29'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-29'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">()</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">email</span><span class="p">,</span><span class="n">brand_name</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">brand_name</span><span class="p">,</span>\
+				<span class="n">first_name</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span><span class="n">last_name</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span>\
+				<span class="n">picture_url</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">picture_url</span><span class="p">,</span><span class="n">mobile</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">mobile</span><span class="p">,</span><span class="n">typ</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">typ</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">typ</span><span class="o">==</span><span class="s1">&#39;ADMIN&#39;</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">userRegistrationResponse</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;user registered successfully&quot;</span><span class="p">,</span><span class="n">assigned_email</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">assigned_email</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">email</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">typ</span><span class="o">==</span><span class="s1">&#39;SUPER_ADMIN&#39;</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">userRegistrationResponse</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;user registered successfully&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-30'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-30'>#</a>
+      </div>
+      <p>adding olv registered emails</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="nd">@endpoints.method</span><span class="p">(</span><span class="n">RegisterEmailRequest</span><span class="p">,</span><span class="n">RegisterEmailResponse</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;/add&#39;</span><span class="p">,</span><span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;POST&#39;</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-31'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-31'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">email</span> <span class="o">=</span> <span class="n">Registered</span><span class="p">()</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">email</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">RegisterEmailResponse</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;email added&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-32'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-32'>#</a>
+      </div>
+      <p>get olv registered emails list</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="nd">@endpoints.method</span><span class="p">(</span><span class="n">message_types</span><span class="o">.</span><span class="n">VoidMessage</span><span class="p">,</span><span class="n">ListResponse</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;/get_registered_emails&#39;</span><span class="p">,</span><span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;GET&quot;</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">email_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-33'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-33'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">registered</span> <span class="o">=</span> <span class="n">Registered</span><span class="p">()</span><span class="o">.</span><span class="n">get_list</span><span class="p">()</span>
+		<span class="n">email_list</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">register</span> <span class="ow">in</span> <span class="n">registered</span><span class="p">:</span>
+			<span class="n">email_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EmailResponse</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">register</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">urlsafe</span><span class="p">(),</span><span class="n">email</span><span class="o">=</span><span class="n">register</span><span class="o">.</span><span class="n">email</span><span class="p">,</span><span class="n">date</span><span class="o">=</span><span class="n">register</span><span class="o">.</span><span class="n">date</span><span class="p">,</span>\
+				<span class="n">verified</span> <span class="o">=</span><span class="n">register</span><span class="o">.</span><span class="n">verified</span><span class="p">,</span><span class="n">active</span><span class="o">=</span><span class="n">register</span><span class="o">.</span><span class="n">active</span><span class="p">))</span>
+		<span class="k">return</span> <span class="n">ListResponse</span><span class="p">(</span><span class="n">emails</span><span class="o">=</span><span class="n">email_list</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-34'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-34'>#</a>
+      </div>
+      <p>return list of conncted gbl accounts</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="nd">@endpoints.method</span><span class="p">(</span><span class="n">message_types</span><span class="o">.</span><span class="n">VoidMessage</span><span class="p">,</span><span class="n">AccountListResponse</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;/get_accounts&#39;</span><span class="p">,</span><span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;GET&quot;</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">get_accounts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">request</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-35'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-35'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">current_user</span> <span class="o">=</span> <span class="n">endpoints</span><span class="o">.</span><span class="n">get_current_user</span><span class="p">()</span><span class="o">.</span><span class="n">email</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-36'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-36'>#</a>
+      </div>
+      <p>get user</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">()</span><span class="o">.</span><span class="n">get_user_type</span><span class="p">(</span><span class="n">current_user</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-37'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-37'>#</a>
+      </div>
+      <p>fetch accounts linked/connected with user using assigned_email
+user.get(&lsquo;data&rsquo;).assigned_email is urlsafe key of olv registred email id</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">accounts</span> <span class="o">=</span> <span class="n">Account</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Account</span><span class="o">.</span><span class="n">registred_to</span> <span class="o">==</span> <span class="n">user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">assigned_email</span><span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span>
+		<span class="n">account_list</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">account</span> <span class="ow">in</span> <span class="n">accounts</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-38'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-38'>#</a>
+      </div>
+      <p>append AccountResponse objects in account list</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>			<span class="n">account_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">AccountResponse</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">account</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>\
+				<span class="n">account_id</span><span class="o">=</span><span class="n">account</span><span class="o">.</span><span class="n">account_id</span><span class="p">,</span>\
+				<span class="n">status</span><span class="o">=</span><span class="n">account</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>\
+				<span class="n">typ</span><span class="o">=</span><span class="n">account</span><span class="o">.</span><span class="n">typ</span><span class="p">,</span>\
+				<span class="n">register_with</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">assigned_email</span><span class="o">.</span><span class="n">urlsafe</span><span class="p">(),</span>\
+				<span class="n">key</span><span class="o">=</span><span class="n">account</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">urlsafe</span><span class="p">(),</span>\
+				<span class="n">connected</span><span class="o">=</span><span class="n">account</span><span class="o">.</span><span class="n">connected</span><span class="p">))</span>
+		<span class="k">return</span> <span class="n">AccountListResponse</span><span class="p">(</span><span class="n">accounts</span><span class="o">=</span><span class="n">account_list</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-39'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-39'>#</a>
+      </div>
+      <p>return list of conncted gbl accounts</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="nd">@endpoints.method</span><span class="p">(</span><span class="n">message_types</span><span class="o">.</span><span class="n">VoidMessage</span><span class="p">,</span><span class="n">AccountListResponse</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;/get_active_accounts&#39;</span><span class="p">,</span><span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;GET&quot;</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">get_active_account</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">request</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-40'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-40'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">current_user</span> <span class="o">=</span> <span class="n">endpoints</span><span class="o">.</span><span class="n">get_current_user</span><span class="p">()</span><span class="o">.</span><span class="n">email</span><span class="p">()</span>
+		<span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">()</span><span class="o">.</span><span class="n">get_user_type</span><span class="p">(</span><span class="n">current_user</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-41'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-41'>#</a>
+      </div>
+      <p>get user active accounts
+accounts connected/linked with olv platform</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">accounts</span> <span class="o">=</span> <span class="n">Account</span><span class="p">()</span><span class="o">.</span><span class="n">get_active_account</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">assigned_email</span><span class="p">)</span>
+		<span class="n">account_list</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">account</span> <span class="ow">in</span> <span class="n">accounts</span><span class="p">:</span>
+			<span class="n">account_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">AccountResponse</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">account</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>\
+				<span class="n">account_id</span><span class="o">=</span><span class="n">account</span><span class="o">.</span><span class="n">account_id</span><span class="p">,</span>\
+				<span class="n">status</span><span class="o">=</span><span class="n">account</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>\
+				<span class="n">typ</span><span class="o">=</span><span class="n">account</span><span class="o">.</span><span class="n">typ</span><span class="p">,</span>\
+				<span class="n">register_with</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">assigned_email</span><span class="o">.</span><span class="n">urlsafe</span><span class="p">(),</span>\
+				<span class="n">key</span><span class="o">=</span><span class="n">account</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">urlsafe</span><span class="p">(),</span>\
+				<span class="n">connected</span><span class="o">=</span><span class="n">account</span><span class="o">.</span><span class="n">connected</span><span class="p">))</span>
+		<span class="k">return</span> <span class="n">AccountListResponse</span><span class="p">(</span><span class="n">accounts</span><span class="o">=</span><span class="n">account_list</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-42'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-42'>#</a>
+      </div>
+      <p>return list of all on boarded clients</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="nd">@endpoints.method</span><span class="p">(</span><span class="n">message_types</span><span class="o">.</span><span class="n">VoidMessage</span><span class="p">,</span><span class="n">ClinetsListResponse</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;/get_clients&#39;</span><span class="p">,</span><span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;GET&quot;</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">get_clients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">request</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-43'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-43'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">users</span> <span class="o">=</span> <span class="n">User</span><span class="p">()</span><span class="o">.</span><span class="n">get_all_admin_users</span><span class="p">()</span>
+		<span class="n">user_list</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
+			<span class="n">user_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">userRegistrationRequest</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span><span class="n">brand_name</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">brand_name</span><span class="p">,</span><span class="n">first_name</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span>\
+				<span class="n">last_name</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span><span class="n">picture_url</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">picture_url</span><span class="p">,</span><span class="n">mobile</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">mobile</span><span class="p">,</span><span class="n">typ</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">typ</span><span class="p">))</span>
+		<span class="k">return</span> <span class="n">ClinetsListResponse</span><span class="p">(</span><span class="n">clients</span><span class="o">=</span><span class="n">user_list</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-44'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-44'>#</a>
+      </div>
+      <p>Api request to connect user with GBL using olv registred email</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="nd">@endpoints.method</span><span class="p">(</span><span class="n">message_types</span><span class="o">.</span><span class="n">VoidMessage</span><span class="p">,</span><span class="n">ConnectAccountResponse</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;/connect_gbl&#39;</span><span class="p">,</span><span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;GET&quot;</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">connect_gbl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">request</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-45'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-45'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">current_user</span> <span class="o">=</span> <span class="n">endpoints</span><span class="o">.</span><span class="n">get_current_user</span><span class="p">()</span><span class="o">.</span><span class="n">email</span><span class="p">()</span>
+		<span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">()</span><span class="o">.</span><span class="n">get_user_type</span><span class="p">(</span><span class="n">current_user</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-46'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-46'>#</a>
+      </div>
+      <p>invoke self.fetch_gbl_account method to create async task to connect with gbl 
+and fetch gbl connected accounts</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">accounts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fetch_gbl_account</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">assigned_email</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">creds</span><span class="p">,</span><span class="n">user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">assigned_email</span><span class="p">,</span><span class="n">user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">key</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">ConnectAccountResponse</span><span class="p">(</span><span class="n">register_with</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">assigned_email</span><span class="o">.</span><span class="n">urlsafe</span><span class="p">())</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-47'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-47'>#</a>
+      </div>
+      <p>return user gbl connection status</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="nd">@endpoints.method</span><span class="p">(</span><span class="n">message_types</span><span class="o">.</span><span class="n">VoidMessage</span><span class="p">,</span><span class="n">ConnectAccountResponse</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;/gbl_connection_status&#39;</span><span class="p">,</span><span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;GET&quot;</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">gbl_connection_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">request</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-48'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-48'>#</a>
+      </div>
+      <pre><code>        register_with : urlsafe olv registred email key
+        accounts_connected : no accounts connected
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">current_user</span> <span class="o">=</span> <span class="n">endpoints</span><span class="o">.</span><span class="n">get_current_user</span><span class="p">()</span><span class="o">.</span><span class="n">email</span><span class="p">()</span>
+		<span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">()</span><span class="o">.</span><span class="n">get_user_type</span><span class="p">(</span><span class="n">current_user</span><span class="p">)</span>
+		<span class="n">accounts</span> <span class="o">=</span> <span class="n">Account</span><span class="p">()</span><span class="o">.</span><span class="n">get_account_keys</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">assigned_email</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">ConnectAccountResponse</span><span class="p">(</span><span class="n">register_with</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">assigned_email</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">email</span><span class="p">,</span><span class="n">accounts_connected</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">accounts</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-49'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-49'>#</a>
+      </div>
+      <p>Api request to fetch locations for gbl connected account</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="nd">@endpoints.method</span><span class="p">(</span><span class="n">FetchAccountLocationsRequest</span><span class="p">,</span><span class="n">FetchLocationResponse</span><span class="p">,</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;/fetch_locations&#39;</span><span class="p">,</span><span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;POST&quot;</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">fetch_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">request</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-50'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-50'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">current_user</span> <span class="o">=</span> <span class="n">endpoints</span><span class="o">.</span><span class="n">get_current_user</span><span class="p">()</span><span class="o">.</span><span class="n">email</span><span class="p">()</span>
+		<span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">()</span><span class="o">.</span><span class="n">get_user_type</span><span class="p">(</span><span class="n">current_user</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-51'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-51'>#</a>
+      </div>
+      <p>get account key from urlsafe key
+ndb.Key(urlsafe=request.account_key).get() return account entity from db</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">account</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">Key</span><span class="p">(</span><span class="n">urlsafe</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">account_key</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-52'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-52'>#</a>
+      </div>
+      <p>if account not connected</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="k">if</span> <span class="ow">not</span> <span class="n">account</span><span class="o">.</span><span class="n">connected</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-53'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-53'>#</a>
+      </div>
+      <p>update account connection flag</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>			<span class="n">account</span> <span class="o">=</span> <span class="n">Account</span><span class="p">()</span><span class="o">.</span><span class="n">updateConnectStatus</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">account_key</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-54'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-54'>#</a>
+      </div>
+      <p>create task to fetch location for gbl account </p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>			<span class="n">fetch_locations</span> <span class="o">=</span> <span class="n">taskqueue</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+				<span class="n">url</span><span class="o">=</span><span class="s1">&#39;/fetch/locations&#39;</span><span class="p">,</span>
+				<span class="n">target</span><span class="o">=</span><span class="s1">&#39;background&#39;</span><span class="p">,</span>
+				<span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;registred_key&#39;</span><span class="p">:</span><span class="n">request</span><span class="o">.</span><span class="n">register_with</span><span class="p">,</span>\
+				<span class="s1">&#39;account_key&#39;</span><span class="p">:</span><span class="n">request</span><span class="o">.</span><span class="n">account_key</span><span class="p">,</span>\
+				<span class="s1">&#39;account_id&#39;</span><span class="p">:</span><span class="n">request</span><span class="o">.</span><span class="n">account_id</span><span class="p">})</span>
+			<span class="k">return</span> <span class="n">FetchLocationResponse</span><span class="p">(</span><span class="n">connecting</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>\
+				<span class="n">status</span><span class="o">=</span><span class="s1">&#39;Synchronising with Google Business Listing&#39;</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-55'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-55'>#</a>
+      </div>
+      <p>else return already connected</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>			<span class="k">return</span> <span class="n">FetchLocationResponse</span><span class="p">(</span><span class="n">connecting</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>\
+				<span class="n">status</span><span class="o">=</span><span class="s1">&#39;Account already Connected&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-56'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-56'>#</a>
+      </div>
+      <p>Api request to fetch users gbl accounts using assigned olv register email key</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">fetch_gbl_account</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">creds</span><span class="p">,</span><span class="n">registered_email_key</span><span class="p">,</span><span class="n">user_key</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-57'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-57'>#</a>
+      </div>
+      <p>fetch gbl connected accounts</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">fetch</span> <span class="o">=</span> <span class="n">FetchGbl</span><span class="p">(</span><span class="n">creds</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-58'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-58'>#</a>
+      </div>
+      <p>fetch connected accounts</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">results</span> <span class="o">=</span> <span class="n">fetch</span><span class="o">.</span><span class="n">get_connected_accounts</span><span class="p">()</span>
+		<span class="n">accounts</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;accounts&#39;</span><span class="p">)</span>
+		<span class="n">accounts</span> <span class="o">=</span> <span class="n">Account</span><span class="p">()</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">registered_email_key</span><span class="p">,</span><span class="n">accounts</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">accounts</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-59'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-59'>#</a>
+      </div>
+      <p>checks if user session exists</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="nd">@endpoints.method</span><span class="p">(</span><span class="n">message_types</span><span class="o">.</span><span class="n">VoidMessage</span><span class="p">,</span><span class="n">SessionResponse</span><span class="p">,</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;/check_if_session_exists&#39;</span><span class="p">,</span><span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;GET&quot;</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">check_if_session_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">request</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-60'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-60'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">current_user</span> <span class="o">=</span> <span class="n">endpoints</span><span class="o">.</span><span class="n">get_current_user</span><span class="p">()</span><span class="o">.</span><span class="n">email</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-61'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-61'>#</a>
+      </div>
+      <p>get access token from headers</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">oauth_token</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">_Message__unrecognized_fields</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;access_token&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-62'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-62'>#</a>
+      </div>
+      <p>get session from memecache</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">session</span> <span class="o">=</span> <span class="n">Cache</span><span class="p">()</span><span class="o">.</span><span class="n">check_if_user_session</span><span class="p">(</span><span class="n">current_user</span><span class="p">,</span><span class="n">oauth_token</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">session</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">SessionResponse</span><span class="p">(</span><span class="n">session</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">SessionResponse</span><span class="p">(</span><span class="n">session</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

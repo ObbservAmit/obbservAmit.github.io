@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>message.py</title>
+  <link rel="stylesheet" href="../../pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>message.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">protorpc</span> <span class="kn">import</span> <span class="n">messages</span>
+<span class="kn">from</span> <span class="nn">protorpc</span> <span class="kn">import</span> <span class="n">message_types</span>
+<span class="kn">import</span> <span class="nn">endpoints</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>location request message class get location key, start date, end date and account key form clinet</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">LocationKey</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">location_key</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="n">startDate</span> <span class="o">=</span> <span class="n">message_types</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+	<span class="n">endDate</span> <span class="o">=</span> <span class="n">message_types</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+	<span class="n">account_key</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>response message class return views_map and views_search</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">Views</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">views_map</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">views_search</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>response class return list of views containing views objects</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">ViewsListResponse</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">views</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">MessageField</span><span class="p">(</span><span class="n">Views</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">repeated</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>response class return Action(actions_driving_directions,actions_phone,actions_website)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">Actions</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">actions_driving_directions</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">actions_phone</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">actions_website</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>response class return Action(actions_driving_directions,actions_phone,actions_website)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">ActionsListResponse</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">actions</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">MessageField</span><span class="p">(</span><span class="n">Actions</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">repeated</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>response class return Searches(indirect_search,direct_search)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">Searches</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">indirect_search</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">direct_search</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>Location response class return location-&gt;(geo_points,location_placeId,name,phone_number,website_url,location_key)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">LocationMessage</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">geo_points</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">location_placeId</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">name</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">phone_number</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+	<span class="n">website_url</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+	<span class="n">location_key</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>location response class return location list containing LocationMessage objects</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">LocationListResponse</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">locations</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">MessageField</span><span class="p">(</span><span class="n">LocationMessage</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">repeated</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <p>Address response class return location address details-&gt; (regionCode,languageCode,postalCode,administrativeArea,locality,addressLines,name)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">AddressResponse</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">regionCode</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">languageCode</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">postalCode</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">administrativeArea</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">locality</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">addressLines</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="n">repeated</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">name</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      <p>MetaResponse response class return location meta data-&gt;(labels,mapsUrl)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">MetaResponse</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-20'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-20'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">labels</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">repeated</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">mapsUrl</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-21'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-21'>#</a>
+      </div>
+      <p>CategorysResponse response class return categorys list location belong to</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">CategorysResponse</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-22'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-22'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">categorys</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">repeated</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-23'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-23'>#</a>
+      </div>
+      <p>LocationInsightChange request class get location P1 start date ,P1 end date,P2 start date,P2 end date and account key</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">LocationInsightChange</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-24'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-24'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">p1_start</span> <span class="o">=</span> <span class="n">message_types</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="n">p1_end</span> <span class="o">=</span> <span class="n">message_types</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+	<span class="n">p2_start</span> <span class="o">=</span> <span class="n">message_types</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+	<span class="n">p2_end</span> <span class="o">=</span> <span class="n">message_types</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+	<span class="n">account_key</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-25'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-25'>#</a>
+      </div>
+      <p>location insights change response class return insights change between two periods p1 and p2</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">LocationInsightChangeResponse</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-26'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-26'>#</a>
+      </div>
+      <pre><code>    return =&gt; (
+        name,website_url,location_key,p_change_actions,p1_actions,p2_actions,p_change_views,p1_views,p2_views,p_change_searches
+        p1_searches,p2_searches,score,p1_score,p2_score
+    )
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">name</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">website_url</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+	<span class="n">location_key</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+	<span class="n">p_change_actions</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+	<span class="n">p1_actions</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+	<span class="n">p2_actions</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+	<span class="n">p_change_views</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+	<span class="n">p1_views</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+	<span class="n">p2_views</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+	<span class="n">p_change_searches</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+	<span class="n">p1_searches</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span>
+	<span class="n">p2_searches</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+	<span class="n">score</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
+	<span class="n">p1_score</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">14</span><span class="p">)</span>
+	<span class="n">p2_score</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-27'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-27'>#</a>
+      </div>
+      <p>Locations response class return list of LocationInsightChangeResponse objects</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">LocationInsightChangeResponseList</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-28'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-28'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">locations</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">MessageField</span><span class="p">(</span><span class="n">LocationInsightChangeResponse</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">repeated</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-29'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-29'>#</a>
+      </div>
+      <p>response class return graph data which is used to display graph on client side</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">ActionInsightGraph</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-30'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-30'>#</a>
+      </div>
+      <pre><code>    dates: list
+    actions on phone: list
+    actions on website: list
+    actions on directions: list
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">dates</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">repeated</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">phone</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">repeated</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">website</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">repeated</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">directions</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">repeated</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-31'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-31'>#</a>
+      </div>
+      <p>response class return search insights graph data</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">SearchInsightGraph</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-32'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-32'>#</a>
+      </div>
+      <pre><code>    dates: list
+    searchs direct: list
+    searchs indirect: list
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">dates</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">repeated</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">direct</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">repeated</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">indirect</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">repeated</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-33'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-33'>#</a>
+      </div>
+      <p>response class return views graph data</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">ViewInsightGraph</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-34'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-34'>#</a>
+      </div>
+      <pre><code>    dates: list
+    views map_: list
+    views search: list
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">dates</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">repeated</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">map_</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">repeated</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">search</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">repeated</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

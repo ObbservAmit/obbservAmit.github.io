@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>address.py</title>
+  <link rel="stylesheet" href="../pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>address.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">google.appengine.ext</span> <span class="kn">import</span> <span class="n">ndb</span>
+<span class="kn">from</span> <span class="nn">location</span> <span class="kn">import</span> <span class="n">Location</span>
+<span class="kn">import</span> <span class="nn">logging</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>store location/listing address details</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">Address</span><span class="p">(</span><span class="n">ndb</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">location</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">KeyProperty</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="n">Location</span><span class="p">)</span> 
+	<span class="n">regionCode</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+	<span class="n">languageCode</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+	<span class="n">postalCode</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">IntegerProperty</span><span class="p">()</span>
+	<span class="n">administrativeArea</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+	<span class="n">locality</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+	<span class="n">addressLines</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">(</span><span class="n">repeated</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>insert address details for location</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre> 	<span class="k">def</span> <span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">location</span><span class="p">,</span><span class="n">regionCode</span><span class="p">,</span><span class="n">languageCode</span><span class="p">,</span><span class="n">postalCode</span><span class="p">,</span><span class="n">administrativeArea</span><span class="p">,</span><span class="n">locality</span><span class="p">,</span><span class="n">addressLines</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre> 		<span class="n">address_key</span> <span class="o">=</span> <span class="n">Address</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Address</span><span class="o">.</span><span class="n">location</span> <span class="o">==</span> <span class="n">location</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">keys_only</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">address_key</span><span class="p">:</span>
+	 		<span class="n">address</span> <span class="o">=</span> <span class="n">Address</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">,</span><span class="n">regionCode</span><span class="o">=</span><span class="n">regionCode</span><span class="p">,</span><span class="n">languageCode</span><span class="o">=</span><span class="n">languageCode</span><span class="p">,</span>\
+	 				<span class="n">postalCode</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">postalCode</span> <span class="k">if</span> <span class="n">postalCode</span> <span class="k">else</span> <span class="mo">00000</span><span class="p">),</span><span class="n">administrativeArea</span><span class="o">=</span><span class="n">administrativeArea</span><span class="p">,</span><span class="n">locality</span><span class="o">=</span><span class="n">locality</span><span class="p">,</span><span class="n">addressLines</span><span class="o">=</span><span class="n">addressLines</span><span class="p">)</span>
+	 		<span class="k">return</span> <span class="n">address</span><span class="o">.</span><span class="n">put</span><span class="p">()</span>
+	 	<span class="k">else</span><span class="p">:</span>
+	 		<span class="k">return</span> <span class="n">address_key</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>return address data</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">get_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">location</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">address</span> <span class="o">=</span> <span class="n">Address</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Address</span><span class="o">.</span><span class="n">location</span> <span class="o">==</span> <span class="n">location</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+		<span class="k">return</span> <span class="p">{</span>
+			<span class="s1">&#39;regionCode&#39;</span><span class="p">:</span><span class="n">address</span><span class="o">.</span><span class="n">regionCode</span><span class="p">,</span>
+			<span class="s1">&#39;languageCode&#39;</span><span class="p">:</span><span class="n">address</span><span class="o">.</span><span class="n">languageCode</span><span class="p">,</span>
+			<span class="s1">&#39;postalCode&#39;</span><span class="p">:</span><span class="n">address</span><span class="o">.</span><span class="n">postalCode</span><span class="p">,</span>
+			<span class="s1">&#39;administrativeArea&#39;</span><span class="p">:</span><span class="n">address</span><span class="o">.</span><span class="n">administrativeArea</span><span class="p">,</span>
+			<span class="s1">&#39;locality&#39;</span><span class="p">:</span><span class="n">address</span><span class="o">.</span><span class="n">locality</span><span class="p">,</span>
+			<span class="s1">&#39;addressLines&#39;</span><span class="p">:</span><span class="n">address</span><span class="o">.</span><span class="n">addressLines</span><span class="p">,</span>
+		<span class="p">}</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

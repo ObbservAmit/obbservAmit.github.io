@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>auth.py</title>
+  <link rel="stylesheet" href="../../pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>auth.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>Oauth Check Module/Service
+App engine imports</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">endpoints</span>
+<span class="kn">from</span> <span class="nn">google.appengine.ext</span> <span class="kn">import</span> <span class="n">ndb</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>user modal</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">modal.user</span> <span class="kn">import</span> <span class="n">User</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>auth checker for endpoints</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">auth_check</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+	<span class="sd">&#39;&#39;&#39; Auth Check Decorator Defination &#39;&#39;&#39;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">auth</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="n">current_user</span> <span class="o">=</span> <span class="n">endpoints</span><span class="o">.</span><span class="n">get_current_user</span><span class="p">()</span>
+		<span class="k">if</span> <span class="n">current_user</span><span class="p">:</span>
+			<span class="sd">&#39;&#39;&#39;Use App Users here later&#39;&#39;&#39;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>check for user key in User model</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>			<span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">check_if_exist</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">email</span><span class="p">())</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>else check in parent model</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>			<span class="k">if</span> <span class="n">user</span><span class="p">:</span>
+				<span class="bp">self</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+				<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">email</span><span class="p">())</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">current_user</span> <span class="o">=</span> <span class="n">current_user</span><span class="o">.</span><span class="n">email</span><span class="p">()</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">current_user_key</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">key</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">current_user_info</span> <span class="o">=</span> <span class="n">user</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">current_user_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">firstname</span><span class="p">,</span><span class="n">user</span><span class="o">.</span><span class="n">lastname</span><span class="p">)</span>
+				<span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="k">raise</span> <span class="n">endpoints</span><span class="o">.</span><span class="n">UnauthorizedException</span><span class="p">(</span><span class="s1">&#39;Invalid User&#39;</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="n">endpoints</span><span class="o">.</span><span class="n">UnauthorizedException</span><span class="p">(</span><span class="s1">&#39;Authentication Error&#39;</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">auth</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

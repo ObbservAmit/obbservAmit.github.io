@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>message.py</title>
+  <link rel="stylesheet" href="../../pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>message.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">protorpc</span> <span class="kn">import</span> <span class="n">messages</span>
+<span class="kn">from</span> <span class="nn">protorpc</span> <span class="kn">import</span> <span class="n">message_types</span>
+<span class="kn">import</span> <span class="nn">endpoints</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>return list of olv registred emails</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">RegisterEmailRequest</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">email</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>response class return the olv registered email assigned to user</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">RegisterEmailResponse</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">message</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="n">assigned_email</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>response class return olv registered email details</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">EmailResponse</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <pre><code>    (email,date,verified,active,key)
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">email</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="n">date</span> <span class="o">=</span> <span class="n">message_types</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+	<span class="n">verified</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+	<span class="n">active</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+	<span class="n">key</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>return list of EmailResponse objects</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">ListResponse</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">emails</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">MessageField</span><span class="p">(</span><span class="n">EmailResponse</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">repeated</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>response class return user details</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">loginResponse</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      <pre><code>    (email,last name, first name, picture url,mobile number,connected flag,assigned email,demo)
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">email</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">last_name</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+	<span class="n">first_name</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+	<span class="n">picture_url</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+	<span class="n">mobile</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+	<span class="n">connected</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+	<span class="n">assigned_email</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+	<span class="n">demo</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>register request class get the user data from client</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">userRegistrationRequest</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      <pre><code>    email,brand_name,first_name,last_name,picture_url,mobile,typ
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">email</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">brand_name</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">first_name</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">last_name</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">picture_url</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+	<span class="n">mobile</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">typ</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>response class return the olv registered email assigned to user</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">userRegistrationResponse</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">message</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="n">assigned_email</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>return list of userRegistrationRequest objects</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">ClinetsListResponse</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">clients</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">MessageField</span><span class="p">(</span><span class="n">userRegistrationRequest</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">repeated</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <p>response class return gbl connected account detail</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">AccountResponse</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      <pre><code>    name:string
+    account urlsafe key: string
+    account id : string
+    status : string (verified,unverified,published)
+    typ: string
+    register_with : string (olv registred email urlsafe key)
+    connected : boolean flag (gbl connection status flag)
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">name</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">key</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+	<span class="n">account_id</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">status</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">typ</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+	<span class="n">register_with</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+	<span class="n">connected</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      <p>response class return AccountResponse objects list</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">AccountListResponse</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-20'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-20'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">accounts</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">MessageField</span><span class="p">(</span><span class="n">AccountResponse</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">repeated</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-21'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-21'>#</a>
+      </div>
+      <p>request class get user request to connect gbl connected account with OLV platfrom</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">FetchAccountLocationsRequest</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-22'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-22'>#</a>
+      </div>
+      <pre><code>    register_with : olv registred email urlsafe key
+    account_key : account to be connect with OLV urlsafe key
+    account_id : account id
+    flag : boolean
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">register_with</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">account_key</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">account_id</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">flag</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-23'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-23'>#</a>
+      </div>
+      <p>response return account connecting status to clinet</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">FetchLocationResponse</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-24'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-24'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">status</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">connecting</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-25'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-25'>#</a>
+      </div>
+      <p>return connected account urlsafe key</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">ConnectAccountRequest</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-26'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-26'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">account_key</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-27'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-27'>#</a>
+      </div>
+      <p>response class return</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">ConnectAccountResponse</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-28'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-28'>#</a>
+      </div>
+      <pre><code>    register_with : olv registred email urlsafe key
+    accounts_connected :  accounts connected with olv
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">register_with</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">StringField</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="n">accounts_connected</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-29'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-29'>#</a>
+      </div>
+      <p>return no of user gbl accounts connected</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">ConnectedAccountsStatus</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-30'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-30'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">no_of_accounts_connected</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-31'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-31'>#</a>
+      </div>
+      <p>session flag, need to update this with better alternative</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">SessionResponse</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-32'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-32'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">session</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

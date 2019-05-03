@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>insights.py</title>
+  <link rel="stylesheet" href="../../pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>insights.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>module to create search document 
+for gbl connected accounts aggregated insights
+here we can create a search index doc and run query to fetch 
+specific search docs</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>app engine search module</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">google.appengine.api</span> <span class="kn">import</span> <span class="n">search</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>logging module</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">import</span> <span class="nn">logging</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>python class to create , query and delete search docs</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">AggregatedDatewiseTotalInsights</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>get search doc</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">search</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span><span class="s1">&#39;aggregated_datewise_total_insights&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>method to create new search doc for location insights data</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">create_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">queries_direct</span><span class="p">,</span><span class="n">queries_indirect</span><span class="p">,</span><span class="n">views_map</span><span class="p">,</span><span class="n">views_search</span><span class="p">,</span><span class="n">actions_phone</span><span class="p">,</span>\
+        <span class="n">actions_driving_directions</span><span class="p">,</span><span class="n">actions_website</span><span class="p">,</span><span class="n">date</span><span class="p">,</span><span class="n">account_id</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <pre><code>if doc already present then update it else create new
+</code></pre>
+<p>generate doc id</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">doc_id</span><span class="o">=</span><span class="s1">&#39;{}-{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">account_id</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>generate latest data dict</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">latest</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;queries_direct&#39;</span><span class="p">:</span><span class="n">queries_direct</span><span class="p">,</span><span class="s1">&#39;queries_indirect&#39;</span><span class="p">:</span><span class="n">queries_indirect</span><span class="p">,</span><span class="s1">&#39;views_map&#39;</span><span class="p">:</span><span class="n">views_map</span><span class="p">,</span><span class="s1">&#39;views_search&#39;</span><span class="p">:</span><span class="n">views_search</span><span class="p">,</span><span class="s1">&#39;actions_phone&#39;</span><span class="p">:</span><span class="n">actions_phone</span><span class="p">,</span>\
+        <span class="s1">&#39;actions_driving_directions&#39;</span><span class="p">:</span><span class="n">actions_driving_directions</span><span class="p">,</span><span class="s1">&#39;actions_website&#39;</span><span class="p">:</span><span class="n">actions_website</span><span class="p">,</span><span class="s1">&#39;date&#39;</span><span class="p">:</span><span class="n">date</span><span class="p">,</span><span class="s1">&#39;account_id&#39;</span><span class="p">:</span><span class="n">account_id</span><span class="p">}</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      <p>get old doc</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">old_document</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_document_by_id</span><span class="p">(</span><span class="n">doc_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">old_document</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>if present then update it</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">new_document</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upate_exsiting_doc</span><span class="p">(</span><span class="n">doc_id</span><span class="p">,</span><span class="n">old_document</span><span class="p">,</span><span class="n">latest</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_document</span> <span class="o">=</span> <span class="n">search</span><span class="o">.</span><span class="n">Document</span><span class="p">(</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      <p>Setting the doc_id is optional. If omitted, the search service will
+create an identifier.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">doc_id</span><span class="o">=</span><span class="n">doc_id</span><span class="p">,</span>
+            <span class="n">fields</span><span class="o">=</span><span class="p">[</span>
+                <span class="n">search</span><span class="o">.</span><span class="n">NumberField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_searches&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">queries_direct</span><span class="o">+</span><span class="n">queries_indirect</span><span class="p">),</span>
+                <span class="n">search</span><span class="o">.</span><span class="n">NumberField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_queries_direct&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">queries_direct</span><span class="p">),</span>
+                <span class="n">search</span><span class="o">.</span><span class="n">NumberField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_queries_indirect&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">queries_indirect</span><span class="p">),</span>
+                <span class="n">search</span><span class="o">.</span><span class="n">NumberField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_views&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">views_map</span><span class="o">+</span><span class="n">views_search</span><span class="p">),</span>
+                <span class="n">search</span><span class="o">.</span><span class="n">NumberField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_views_map&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">views_map</span><span class="p">),</span>
+                <span class="n">search</span><span class="o">.</span><span class="n">NumberField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_views_search&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">views_search</span><span class="p">),</span>
+                <span class="n">search</span><span class="o">.</span><span class="n">NumberField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_actions&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">actions_driving_directions</span><span class="o">+</span><span class="n">actions_phone</span><span class="o">+</span><span class="n">actions_website</span><span class="p">),</span>
+                <span class="n">search</span><span class="o">.</span><span class="n">NumberField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_actions_driving_directions&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">actions_driving_directions</span><span class="p">),</span>
+                <span class="n">search</span><span class="o">.</span><span class="n">NumberField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_actions_phone&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">actions_phone</span><span class="p">),</span>
+                <span class="n">search</span><span class="o">.</span><span class="n">NumberField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_actions_website&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">actions_website</span><span class="p">),</span>
+                <span class="n">search</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;account_id&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">account_id</span><span class="p">),</span>
+                <span class="n">search</span><span class="o">.</span><span class="n">DateField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">date</span><span class="p">)</span>
+            <span class="p">])</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_document_to_index</span><span class="p">(</span><span class="n">new_document</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>adding search doc in docs</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">add_document_to_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">document</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">search</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+			<span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;doc Put failed&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>add doc in search docs and return doc id</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">add_documents_and_get_doc_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">documents</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span>
+            <span class="n">document_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">document</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">document</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">document_ids</span>
+        <span class="k">except</span> <span class="n">search</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+			<span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;doc Put failed&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <p>get document using doc id</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">get_document_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">doc_id</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      <p>Get a single document by ID.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">document</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">doc_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">document</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      <p>create search query for search indexs</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">query_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">query_string</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-20'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-20'>#</a>
+      </div>
+      <pre><code>using cursor to fetch all search results
+</code></pre>
+<p>create seach cursor</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">cursor</span> <span class="o">=</span> <span class="n">search</span><span class="o">.</span><span class="n">Cursor</span><span class="p">()</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">while</span> <span class="n">cursor</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-21'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-21'>#</a>
+      </div>
+      <p>Build the query using the cursor.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">options</span> <span class="o">=</span> <span class="n">search</span><span class="o">.</span><span class="n">QueryOptions</span><span class="p">(</span><span class="n">cursor</span><span class="o">=</span><span class="n">cursor</span><span class="p">)</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="n">search</span><span class="o">.</span><span class="n">Query</span><span class="p">(</span><span class="n">query_string</span><span class="o">=</span><span class="n">query_string</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-22'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-22'>#</a>
+      </div>
+      <p>Get the results and the next cursor</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">fetch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">fetch</span><span class="p">)</span>
+            <span class="n">cursor</span> <span class="o">=</span> <span class="n">fetch</span><span class="o">.</span><span class="n">cursor</span>
+        <span class="k">return</span> <span class="n">results</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-23'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-23'>#</a>
+      </div>
+      <p>update already existing doc</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">upate_exsiting_doc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">doc_id</span><span class="p">,</span><span class="n">old_document</span><span class="p">,</span><span class="n">latest</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-24'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-24'>#</a>
+      </div>
+      <p>create new and replace older doc</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">updated_document</span> <span class="o">=</span> <span class="n">search</span><span class="o">.</span><span class="n">Document</span><span class="p">(</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-25'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-25'>#</a>
+      </div>
+      <p>Setting the doc_id is optional. If omitted, the search service will
+create an identifier.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">doc_id</span><span class="o">=</span><span class="n">doc_id</span><span class="p">,</span>
+        <span class="n">fields</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">search</span><span class="o">.</span><span class="n">NumberField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_searches&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">old_document</span><span class="p">[</span><span class="s1">&#39;total_searches&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">+</span><span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;queries_direct&#39;</span><span class="p">)</span><span class="o">+</span><span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;queries_indirect&#39;</span><span class="p">)),</span>
+            <span class="n">search</span><span class="o">.</span><span class="n">NumberField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_queries_direct&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">old_document</span><span class="p">[</span><span class="s1">&#39;total_queries_direct&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">+</span><span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;queries_direct&#39;</span><span class="p">)),</span>
+            <span class="n">search</span><span class="o">.</span><span class="n">NumberField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_queries_indirect&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">old_document</span><span class="p">[</span><span class="s1">&#39;total_queries_indirect&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">+</span><span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;queries_indirect&#39;</span><span class="p">)),</span>
+            <span class="n">search</span><span class="o">.</span><span class="n">NumberField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_views&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">old_document</span><span class="p">[</span><span class="s1">&#39;total_views&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">+</span><span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;views_map&#39;</span><span class="p">)</span><span class="o">+</span><span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;views_search&#39;</span><span class="p">)),</span>
+            <span class="n">search</span><span class="o">.</span><span class="n">NumberField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_views_map&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">old_document</span><span class="p">[</span><span class="s1">&#39;total_views_map&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">+</span><span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;views_map&#39;</span><span class="p">)),</span>
+            <span class="n">search</span><span class="o">.</span><span class="n">NumberField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_views_search&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">old_document</span><span class="p">[</span><span class="s1">&#39;total_views_search&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">+</span><span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;views_search&#39;</span><span class="p">)),</span>
+            <span class="n">search</span><span class="o">.</span><span class="n">NumberField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_actions&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">old_document</span><span class="p">[</span><span class="s1">&#39;total_actions&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">+</span><span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;actions_driving_directions&#39;</span><span class="p">)</span><span class="o">+</span><span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;actions_phone&#39;</span><span class="p">)</span><span class="o">+</span><span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;actions_website&#39;</span><span class="p">)),</span>
+            <span class="n">search</span><span class="o">.</span><span class="n">NumberField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_actions_driving_directions&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">old_document</span><span class="p">[</span><span class="s1">&#39;total_actions_driving_directions&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">+</span><span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;actions_driving_directions&#39;</span><span class="p">)),</span>
+            <span class="n">search</span><span class="o">.</span><span class="n">NumberField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_actions_phone&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">old_document</span><span class="p">[</span><span class="s1">&#39;total_actions_phone&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">+</span><span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;actions_phone&#39;</span><span class="p">)),</span>
+            <span class="n">search</span><span class="o">.</span><span class="n">NumberField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_actions_website&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">old_document</span><span class="p">[</span><span class="s1">&#39;total_actions_website&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">+</span><span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;actions_website&#39;</span><span class="p">)),</span>
+            <span class="n">search</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;account_id&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;account_id&#39;</span><span class="p">)),</span>
+            <span class="n">search</span><span class="o">.</span><span class="n">DateField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">))</span>
+        <span class="p">])</span>
+        <span class="k">return</span> <span class="n">updated_document</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-26'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-26'>#</a>
+      </div>
+      <p>delete all search index docs</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">delete_all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-27'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-27'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">document_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">document</span><span class="o">.</span><span class="n">doc_id</span> <span class="k">for</span> <span class="n">document</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get_range</span><span class="p">(</span><span class="n">ids_only</span><span class="o">=</span><span class="bp">True</span><span class="p">)]</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">document_ids</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">document_ids</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">document_ids</span><span class="p">)</span>
+            <span class="n">document_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">document</span><span class="o">.</span><span class="n">doc_id</span> <span class="k">for</span> <span class="n">document</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get_range</span><span class="p">(</span><span class="n">ids_only</span><span class="o">=</span><span class="bp">True</span><span class="p">)]</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

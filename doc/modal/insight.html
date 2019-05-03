@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>insight.py</title>
+  <link rel="stylesheet" href="../pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>insight.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">google.appengine.ext</span> <span class="kn">import</span> <span class="n">ndb</span>
+<span class="kn">from</span> <span class="nn">location</span> <span class="kn">import</span> <span class="n">Location</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">datetime</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>search document for aggregated datewise total insights for account</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">search_index.documents.insights</span> <span class="kn">import</span> <span class="n">AggregatedDatewiseTotalInsights</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>search document for aggregated datewise total insights for location</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">search_index.documents.location</span> <span class="kn">import</span> <span class="n">LocationDatewiseInsights</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>ndb modal to maintain Insight details/data for location</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">Insight</span><span class="p">(</span><span class="n">ndb</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">location</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">KeyProperty</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="n">Location</span><span class="p">)</span>
+ 	<span class="n">date</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">DateTimeProperty</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">queries_direct</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">IntegerProperty</span><span class="p">()</span>
+	<span class="n">queries_indirect</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">IntegerProperty</span><span class="p">()</span>
+	<span class="n">queries_chain</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">IntegerProperty</span><span class="p">()</span>
+	<span class="n">views_map</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">IntegerProperty</span><span class="p">()</span>
+	<span class="n">views_search</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">IntegerProperty</span><span class="p">()</span>	
+	<span class="n">actions_website</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">IntegerProperty</span><span class="p">()</span>
+	<span class="n">actions_phone</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">IntegerProperty</span><span class="p">()</span>
+	<span class="n">actions_driving_directions</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">IntegerProperty</span><span class="p">()</span>
+	<span class="n">photos_views_merchant</span>  <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">IntegerProperty</span><span class="p">()</span>
+	<span class="n">photos_views_customers</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">IntegerProperty</span><span class="p">()</span>	
+	<span class="n">photos_count_merchant</span>  <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">IntegerProperty</span><span class="p">()</span>
+	<span class="n">photos_count_customers</span>  <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">IntegerProperty</span><span class="p">()</span>
+	<span class="n">local_post_views_search</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">IntegerProperty</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>post hook runs after creating/ inserting new insight</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">_post_put_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">future</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">aggregatedDatewiseTotalInsightDocument</span> <span class="o">=</span> <span class="n">AggregatedDatewiseTotalInsights</span><span class="p">()</span><span class="o">.</span><span class="n">create_document</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queries_direct</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">queries_indirect</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">views_map</span><span class="p">,</span>\
+			<span class="bp">self</span><span class="o">.</span><span class="n">views_search</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">actions_phone</span><span class="p">,</span>\
+        	<span class="bp">self</span><span class="o">.</span><span class="n">actions_driving_directions</span><span class="p">,</span>\
+			<span class="bp">self</span><span class="o">.</span><span class="n">actions_website</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">urlsafe</span><span class="p">())</span>
+		<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">aggregatedDatewiseTotalInsightDocument</span><span class="p">)</span>
+		<span class="n">locationDatewiseInsightDocument</span> <span class="o">=</span> <span class="n">LocationDatewiseInsights</span><span class="p">()</span><span class="o">.</span><span class="n">create_document</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">queries_direct</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">queries_indirect</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">views_map</span><span class="p">,</span>\
+			<span class="bp">self</span><span class="o">.</span><span class="n">views_search</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">actions_phone</span><span class="p">,</span>\
+        	<span class="bp">self</span><span class="o">.</span><span class="n">actions_driving_directions</span><span class="p">,</span>\
+			<span class="bp">self</span><span class="o">.</span><span class="n">actions_website</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">urlsafe</span><span class="p">())</span>
+		<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">locationDatewiseInsightDocument</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>method to generate query string to fetch search results form index documents</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">generate_accounts_query_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">accounts_query_str</span><span class="p">,</span><span class="n">account_query</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <p>checks if query string already exist/ have account</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">accounts_query_str</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+			<span class="n">accounts_query_str</span> <span class="o">=</span> <span class="s1">&#39;{} OR {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">accounts_query_str</span><span class="p">,</span><span class="n">account_query</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">accounts_query_str</span> <span class="o">=</span> <span class="s1">&#39;{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">account_query</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">accounts_query_str</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>fetch insights specific accounts from index documnets between start and end date</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">fetch_insight_from_search_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">accounts</span><span class="p">,</span><span class="n">start_date</span><span class="p">,</span><span class="n">end_date</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">accounts_query_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>if accounts exist then create a query string for accounts and start /end date
+else create query string for start/end date</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="k">if</span> <span class="n">accounts</span><span class="p">:</span>
+			<span class="k">for</span> <span class="n">account</span> <span class="ow">in</span> <span class="n">accounts</span><span class="p">:</span>
+				<span class="n">accounts_query_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_accounts_query_str</span><span class="p">(</span><span class="n">accounts_query_str</span><span class="p">,</span><span class="s1">&#39;account_id={}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">account</span><span class="o">.</span><span class="n">urlsafe</span><span class="p">()))</span>
+			<span class="n">query_string</span> <span class="o">=</span> <span class="s1">&#39;({}) AND (date &gt;= {} AND date &lt;= {})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">accounts_query_str</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="nb">str</span><span class="p">(</span><span class="n">end_date</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">query_string</span> <span class="o">=</span> <span class="s1">&#39;date &gt;= {} AND date &lt;= {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="nb">str</span><span class="p">(</span><span class="n">end_date</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      <p>calling class method to get results</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">search_insights</span> <span class="o">=</span> <span class="n">AggregatedDatewiseTotalInsights</span><span class="p">()</span><span class="o">.</span><span class="n">query_index</span><span class="p">(</span><span class="n">query_string</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>init vars</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">actions_website</span> <span class="o">=</span> <span class="n">actions_phone</span> <span class="o">=</span> <span class="n">actions_driving_directions</span> <span class="o">=</span> <span class="n">views_map</span> <span class="o">=</span> <span class="n">views_search</span> <span class="o">=</span> <span class="n">direct_search</span> <span class="o">=</span> <span class="n">indirect_search</span> <span class="o">=</span> <span class="mi">0</span>
+
+		<span class="k">for</span> <span class="n">insight</span> <span class="ow">in</span> <span class="n">search_insights</span><span class="p">:</span> 
+			<span class="n">actions_website</span> <span class="o">+=</span> <span class="n">insight</span><span class="p">[</span><span class="s1">&#39;total_actions_website&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+			<span class="n">actions_phone</span> <span class="o">+=</span> <span class="n">insight</span><span class="p">[</span><span class="s1">&#39;total_actions_phone&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+			<span class="n">actions_driving_directions</span> <span class="o">+=</span><span class="n">insight</span><span class="p">[</span><span class="s1">&#39;total_actions_driving_directions&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+			<span class="n">views_map</span> <span class="o">+=</span> <span class="n">insight</span><span class="p">[</span><span class="s1">&#39;total_views_map&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+			<span class="n">views_search</span> <span class="o">+=</span> <span class="n">insight</span><span class="p">[</span><span class="s1">&#39;total_views_search&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+			<span class="n">direct_search</span> <span class="o">+=</span> <span class="n">insight</span><span class="p">[</span><span class="s1">&#39;total_queries_direct&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+			<span class="n">indirect_search</span> <span class="o">+=</span> <span class="n">insight</span><span class="p">[</span><span class="s1">&#39;total_queries_indirect&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      <p>return</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="k">return</span> <span class="p">{</span>
+				<span class="s1">&#39;actions_website&#39;</span><span class="p">:</span><span class="nb">int</span><span class="p">(</span><span class="n">actions_website</span><span class="p">),</span>\
+				<span class="s1">&#39;actions_phone&#39;</span><span class="p">:</span><span class="nb">int</span><span class="p">(</span><span class="n">actions_phone</span><span class="p">),</span>\
+				<span class="s1">&#39;actions_driving_directions&#39;</span><span class="p">:</span><span class="nb">int</span><span class="p">(</span><span class="n">actions_driving_directions</span><span class="p">),</span>\
+				<span class="s1">&#39;views_search&#39;</span><span class="p">:</span><span class="nb">int</span><span class="p">(</span><span class="n">views_map</span><span class="p">),</span>\
+				<span class="s1">&#39;views_map&#39;</span><span class="p">:</span><span class="nb">int</span><span class="p">(</span><span class="n">views_search</span><span class="p">),</span>\
+				<span class="s1">&#39;direct_search&#39;</span><span class="p">:</span><span class="nb">int</span><span class="p">(</span><span class="n">direct_search</span><span class="p">),</span>\
+				<span class="s1">&#39;indirect_search&#39;</span><span class="p">:</span><span class="nb">int</span><span class="p">(</span><span class="n">indirect_search</span><span class="p">),</span>\
+			<span class="p">}</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>insert/create new entity</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">location</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">insight</span> <span class="o">=</span> <span class="n">Insight</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">insight</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <p>async task , return future object containing query results</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="nd">@ndb.tasklet</span>
+	<span class="k">def</span> <span class="nf">get_multi_insights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">location_keys</span><span class="p">,</span><span class="n">start</span><span class="p">,</span><span class="n">end</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">insightsFuture</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">Insight</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Insight</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">IN</span><span class="p">(</span><span class="n">location_keys</span><span class="p">),</span><span class="n">ndb</span><span class="o">.</span><span class="n">AND</span><span class="p">(</span><span class="n">Insight</span><span class="o">.</span><span class="n">date</span> <span class="o">&gt;=</span> <span class="n">start</span><span class="p">,</span><span class="n">Insight</span><span class="o">.</span><span class="n">date</span> <span class="o">&lt;=</span> <span class="n">end</span><span class="p">))</span><span class="o">.</span><span class="n">fetch_async</span><span class="p">()</span>
+		<span class="k">raise</span> <span class="n">ndb</span><span class="o">.</span><span class="n">Return</span><span class="p">(</span><span class="n">insightsFuture</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      <p>return aggregated sum for list of insights</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">get_aggregated_insights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">insights</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-20'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-20'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">actions_website</span> <span class="o">=</span> <span class="n">actions_phone</span> <span class="o">=</span> <span class="n">actions_driving_directions</span> <span class="o">=</span> <span class="n">views_map</span> <span class="o">=</span> <span class="n">views_search</span> <span class="o">=</span> <span class="n">direct_search</span> <span class="o">=</span> <span class="n">indirect_search</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="k">for</span> <span class="n">insight</span> <span class="ow">in</span> <span class="n">insights</span><span class="p">:</span>
+			<span class="n">actions_website</span> <span class="o">+=</span> <span class="n">insight</span><span class="o">.</span><span class="n">actions_website</span>
+			<span class="n">actions_phone</span> <span class="o">+=</span> <span class="n">insight</span><span class="o">.</span><span class="n">actions_phone</span>
+			<span class="n">actions_driving_directions</span> <span class="o">+=</span><span class="n">insight</span><span class="o">.</span><span class="n">actions_driving_directions</span>
+			<span class="n">views_map</span> <span class="o">+=</span> <span class="n">insight</span><span class="o">.</span><span class="n">views_map</span>
+			<span class="n">views_search</span> <span class="o">+=</span><span class="n">insight</span><span class="o">.</span><span class="n">views_search</span>
+			<span class="n">direct_search</span> <span class="o">+=</span> <span class="n">insight</span><span class="o">.</span><span class="n">queries_direct</span>
+			<span class="n">indirect_search</span> <span class="o">+=</span> <span class="n">insight</span><span class="o">.</span><span class="n">queries_indirect</span>
+		<span class="k">return</span> <span class="p">{</span>
+				<span class="s1">&#39;actions_website&#39;</span><span class="p">:</span><span class="n">actions_website</span><span class="p">,</span>\
+				<span class="s1">&#39;actions_phone&#39;</span><span class="p">:</span><span class="n">actions_phone</span><span class="p">,</span>\
+				<span class="s1">&#39;actions_driving_directions&#39;</span><span class="p">:</span><span class="n">actions_driving_directions</span><span class="p">,</span>\
+				<span class="s1">&#39;views_search&#39;</span><span class="p">:</span><span class="n">views_map</span><span class="p">,</span>\
+				<span class="s1">&#39;views_map&#39;</span><span class="p">:</span><span class="n">views_search</span><span class="p">,</span>\
+				<span class="s1">&#39;direct_search&#39;</span><span class="p">:</span><span class="n">direct_search</span><span class="p">,</span>\
+				<span class="s1">&#39;indirect_search&#39;</span><span class="p">:</span><span class="n">indirect_search</span><span class="p">,</span>
+			<span class="p">}</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-21'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-21'>#</a>
+      </div>
+      <p>return sum of actions , views and searches for list of insights</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">get_insights_sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">insights</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-22'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-22'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">total_actions</span> <span class="o">=</span> <span class="n">total_views</span> <span class="o">=</span> <span class="n">total_searches</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="k">for</span> <span class="n">insight</span> <span class="ow">in</span> <span class="n">insights</span><span class="p">:</span>
+			<span class="n">total_actions</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">insight</span><span class="p">[</span><span class="s1">&#39;actions&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+			<span class="n">total_views</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">insight</span><span class="p">[</span><span class="s1">&#39;views&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+			<span class="n">total_searches</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">insight</span><span class="p">[</span><span class="s1">&#39;searches&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+		<span class="k">return</span> <span class="p">{</span>
+			<span class="s1">&#39;total_actions&#39;</span><span class="p">:</span><span class="n">total_actions</span><span class="p">,</span>\
+			<span class="s1">&#39;total_views&#39;</span><span class="p">:</span><span class="n">total_views</span><span class="p">,</span>\
+			<span class="s1">&#39;total_searches&#39;</span><span class="p">:</span><span class="n">total_searches</span>
+		<span class="p">}</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-23'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-23'>#</a>
+      </div>
+      <p>generate OLV score for busniess listing</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">calculate_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">actions</span><span class="p">,</span><span class="n">views</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-24'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-24'>#</a>
+      </div>
+      <pre><code>    currently its has demo implementation,
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">needs</span> <span class="n">to</span> <span class="n">update</span> <span class="n">it</span> <span class="p">:)</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">		if views==0:</span>
+<span class="s2">			return 0</span>
+<span class="s2">		return (float(actions)/views)*100*3.33</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">	def calculate_change_in_actions(self,p1_insights,p2_insights):</span>
+<span class="s2">		&quot;&quot;&quot;</span><span class="k">return</span> <span class="n">change</span> <span class="ow">in</span> <span class="n">actions</span> <span class="k">for</span> <span class="n">two</span> <span class="n">different</span> <span class="n">period</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">		if p2_insights.get(&#39;total_actions&#39;) &gt; 0:</span>
+<span class="s2">			change = float(p1_insights.get(&#39;total_actions&#39;) - p2_insights.get(&#39;total_actions&#39;))/p2_insights.get(&#39;total_actions&#39;)</span>
+<span class="s2">		else:</span>
+<span class="s2">			change = p1_insights.get(&#39;total_actions&#39;)</span>
+<span class="s2">		return float(&#39;{0:.2f}&#39;.format(change*100))</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">	def calculate_change_in_views(self,p1_insights,p2_insights):</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">		if p2_insights.get(&#39;total_views&#39;)&gt; 0:</span>
+<span class="s2">			change = float(p1_insights.get(&#39;total_views&#39;) - p2_insights.get(&#39;total_views&#39;))/p2_insights.get(&#39;total_views&#39;)</span>
+<span class="s2">		else:</span>
+<span class="s2">			change = p1_insights.get(&#39;total_views&#39;)</span>
+<span class="s2">		return float(&#39;{0:.2f}&#39;.format(change*100))</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">	def calculate_change_in_searches(self,p1_insights,p2_insights):</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">		if p2_insights.get(&#39;total_searches&#39;)&gt; 0:</span>
+<span class="s2">			change = float(p1_insights.get(&#39;total_searches&#39;) - p2_insights.get(&#39;total_searches&#39;))/p2_insights.get(&#39;total_searches&#39;)</span>
+<span class="s2">		else:</span>
+<span class="s2">			change = p1_insights.get(&#39;total_searches&#39;)</span>
+<span class="s2">		return float(&#39;{0:.2f}&#39;.format(change*100))</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">	def get_multi_insights_from_index(self,location,start_date,end_date):</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">		query_string = &#39;location = {} AND date &gt;= {} AND date &lt;= {}&#39;.format(location.urlsafe(),str(start_date).split(&#39; &#39;)[0],str(end_date).split(&#39; &#39;)[0])</span>
+<span class="s2">		results = LocationDatewiseInsights().query_index(query_string)</span>
+<span class="s2">		return results</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">	def generate_graph(self,location_keys,start,end):</span>
+<span class="s2">#DIVIDER</span>
+<span class="s2">		&#39;search&#39;:list,&#39;map&#39;:list} for specific locations between start/end date from insight ndb model&quot;&quot;&quot;</span>
+		<span class="n">dates</span><span class="p">,</span><span class="n">direct</span><span class="p">,</span><span class="n">indirect</span><span class="p">,</span><span class="n">phone</span><span class="p">,</span><span class="n">website</span> <span class="p">,</span><span class="n">direction</span><span class="p">,</span><span class="n">views_search</span><span class="p">,</span><span class="n">views_map</span> <span class="o">=</span> <span class="p">[],[],[],[],[],[],[],[]</span>
+		<span class="n">insights</span> <span class="o">=</span> <span class="n">Insight</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Insight</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">IN</span><span class="p">(</span><span class="n">location_keys</span><span class="p">),</span><span class="n">ndb</span><span class="o">.</span><span class="n">AND</span><span class="p">(</span><span class="n">Insight</span><span class="o">.</span><span class="n">date</span> <span class="o">&gt;=</span> <span class="n">start</span><span class="p">,</span><span class="n">Insight</span><span class="o">.</span><span class="n">date</span> <span class="o">&lt;=</span> <span class="n">end</span><span class="p">))</span><span class="o">.</span><span class="n">order</span><span class="p">(</span><span class="n">Insight</span><span class="o">.</span><span class="n">date</span><span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span>
+		<span class="n">insights</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span> <span class="k">lambda</span> <span class="n">insight</span><span class="p">:</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">insight</span><span class="o">.</span><span class="n">date</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">))</span>
+		<span class="k">for</span> <span class="n">insight</span> <span class="ow">in</span> <span class="n">insights</span><span class="p">:</span>
+			<span class="n">dates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">insight</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2"> %b&quot;</span><span class="p">))</span>
+			<span class="n">direct</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">insight</span><span class="o">.</span><span class="n">queries_direct</span><span class="p">)</span>
+			<span class="n">indirect</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">insight</span><span class="o">.</span><span class="n">queries_indirect</span><span class="p">)</span>
+			<span class="n">views_search</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">insight</span><span class="o">.</span><span class="n">views_search</span><span class="p">)</span>
+			<span class="n">views_map</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">insight</span><span class="o">.</span><span class="n">views_map</span><span class="p">)</span>
+			<span class="n">phone</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">insight</span><span class="o">.</span><span class="n">actions_phone</span><span class="p">)</span>
+			<span class="n">website</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">insight</span><span class="o">.</span><span class="n">actions_website</span><span class="p">)</span>
+			<span class="n">direction</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">insight</span><span class="o">.</span><span class="n">actions_driving_directions</span><span class="p">)</span>
+		<span class="k">return</span> <span class="p">{</span><span class="s1">&#39;dates&#39;</span><span class="p">:</span><span class="n">dates</span><span class="p">,</span><span class="s1">&#39;direct&#39;</span><span class="p">:</span><span class="n">direct</span><span class="p">,</span><span class="s1">&#39;indirect&#39;</span><span class="p">:</span><span class="n">indirect</span><span class="p">,</span><span class="s1">&#39;phone&#39;</span><span class="p">:</span><span class="n">phone</span><span class="p">,</span><span class="s1">&#39;website&#39;</span><span class="p">:</span><span class="n">website</span><span class="p">,</span><span class="s1">&#39;direction&#39;</span><span class="p">:</span><span class="n">direction</span><span class="p">,</span><span class="s1">&#39;search&#39;</span><span class="p">:</span><span class="n">views_search</span><span class="p">,</span><span class="s1">&#39;map&#39;</span><span class="p">:</span><span class="n">views_map</span><span class="p">}</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-25'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-25'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">generate_graph_from_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">accounts</span><span class="p">,</span><span class="n">start_date</span><span class="p">,</span><span class="n">end_date</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;return graph data {&#39;dates&#39;:list,&#39;direct&#39;:list,&#39;indirect&#39;:list,</span>
+<span class="sd">		&#39;phone&#39;:list,&#39;website&#39;:list,&#39;direction&#39;:list,</span>
+<span class="sd">		&#39;search&#39;:list,&#39;map&#39;:list} for specific locations between start/end date from search documents&quot;&quot;&quot;</span>
+		<span class="n">dates</span><span class="p">,</span><span class="n">direct</span><span class="p">,</span><span class="n">indirect</span><span class="p">,</span><span class="n">phone</span><span class="p">,</span><span class="n">website</span> <span class="p">,</span><span class="n">direction</span><span class="p">,</span><span class="n">views_search</span><span class="p">,</span><span class="n">views_map</span> <span class="o">=</span> <span class="p">[],[],[],[],[],[],[],[]</span>
+		<span class="n">accounts_query_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+		<span class="k">if</span> <span class="n">accounts</span><span class="p">:</span>
+			<span class="k">for</span> <span class="n">account</span> <span class="ow">in</span> <span class="n">accounts</span><span class="p">:</span>
+				<span class="n">accounts_query_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_accounts_query_str</span><span class="p">(</span><span class="n">accounts_query_str</span><span class="p">,</span><span class="s1">&#39;account_id={}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">account</span><span class="o">.</span><span class="n">urlsafe</span><span class="p">()))</span>
+			<span class="n">query_string</span> <span class="o">=</span> <span class="s1">&#39;({}) AND (date &gt;= {} AND date &lt;= {})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">accounts_query_str</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="nb">str</span><span class="p">(</span><span class="n">end_date</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">query_string</span> <span class="o">=</span> <span class="s1">&#39;date &gt;= {} AND date &lt;= {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="nb">str</span><span class="p">(</span><span class="n">end_date</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+
+		<span class="n">search_insights</span> <span class="o">=</span> <span class="p">[</span><span class="n">insight</span> <span class="k">for</span> <span class="n">insight</span> <span class="ow">in</span> <span class="n">AggregatedDatewiseTotalInsights</span><span class="p">()</span><span class="o">.</span><span class="n">query_index</span><span class="p">(</span><span class="n">query_string</span><span class="p">)]</span>
+		<span class="n">search_insights</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span> <span class="k">lambda</span> <span class="n">insight</span><span class="p">:</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">insight</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">))</span>
+		<span class="k">for</span> <span class="n">insight</span> <span class="ow">in</span> <span class="n">search_insights</span><span class="p">:</span> 
+			<span class="n">direct</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">insight</span><span class="p">[</span><span class="s1">&#39;total_queries_direct&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+			<span class="n">indirect</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">insight</span><span class="p">[</span><span class="s1">&#39;total_queries_indirect&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+			<span class="n">dates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">insight</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2"> %b&quot;</span><span class="p">))</span>
+			<span class="n">phone</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">insight</span><span class="p">[</span><span class="s1">&#39;total_actions_phone&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+			<span class="n">website</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">insight</span><span class="p">[</span><span class="s1">&#39;total_actions_website&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+			<span class="n">views_search</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">insight</span><span class="p">[</span><span class="s1">&#39;total_views_search&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+			<span class="n">views_map</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">insight</span><span class="p">[</span><span class="s1">&#39;total_views_map&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+			<span class="n">direction</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">insight</span><span class="p">[</span><span class="s1">&#39;total_actions_driving_directions&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+		<span class="k">return</span> <span class="p">{</span><span class="s1">&#39;dates&#39;</span><span class="p">:</span><span class="n">dates</span><span class="p">,</span><span class="s1">&#39;phone&#39;</span><span class="p">:</span><span class="n">phone</span><span class="p">,</span><span class="s1">&#39;website&#39;</span><span class="p">:</span><span class="n">website</span><span class="p">,</span><span class="s1">&#39;direction&#39;</span><span class="p">:</span><span class="n">direction</span><span class="p">,</span><span class="s1">&#39;search&#39;</span><span class="p">:</span><span class="n">views_search</span><span class="p">,</span><span class="s1">&#39;map&#39;</span><span class="p">:</span><span class="n">views_map</span><span class="p">,</span><span class="s1">&#39;direct&#39;</span><span class="p">:</span><span class="n">direct</span><span class="p">,</span><span class="s1">&#39;indirect&#39;</span><span class="p">:</span><span class="n">indirect</span><span class="p">}</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-26'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-26'>#</a>
+      </div>
+      <p>check if denominator is not zero</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">pass</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-27'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-27'>#</a>
+      </div>
+      <p>return change in views for two different period</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">insert_latest_insights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">insight</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;create/insert new location/listing insight data&quot;&quot;&quot;</span>
+		<span class="n">location_key</span> <span class="o">=</span> <span class="n">Location</span><span class="p">()</span><span class="o">.</span><span class="n">get_location_key</span><span class="p">(</span><span class="n">insight</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;locationName&#39;</span><span class="p">))</span>
+		<span class="k">if</span> <span class="n">location_key</span><span class="p">:</span>
+			<span class="n">update_insight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">location_key</span><span class="p">)</span>
+			<span class="k">for</span> <span class="n">metricValue</span> <span class="ow">in</span> <span class="n">insight</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;metricValues&#39;</span><span class="p">):</span>
+				<span class="n">update_insight</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">metricValue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;totalValue&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeDimension&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeRange&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;startTime&#39;</span><span class="p">),</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H:%M:%SZ&quot;</span><span class="p">)</span> 
+				<span class="n">metric</span> <span class="o">=</span> <span class="n">metricValue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;metric&#39;</span><span class="p">,</span><span class="bp">None</span><span class="p">)</span>
+				<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">metric</span><span class="p">)</span>
+				<span class="k">if</span> <span class="n">metric</span><span class="p">:</span>
+					<span class="n">property_string</span> <span class="o">=</span> <span class="n">metric</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+					<span class="k">if</span> <span class="n">property_string</span> <span class="o">==</span> <span class="s1">&#39;queries_direct&#39;</span><span class="p">:</span>
+						<span class="n">update_insight</span><span class="o">.</span><span class="n">queries_direct</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">metricValue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;totalValue&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">))</span>
+					<span class="k">elif</span> <span class="n">property_string</span> <span class="o">==</span> <span class="s1">&#39;queries_indirect&#39;</span><span class="p">:</span>
+						<span class="n">update_insight</span><span class="o">.</span><span class="n">queries_indirect</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">metricValue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;totalValue&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">))</span>
+					<span class="k">elif</span> <span class="n">property_string</span> <span class="o">==</span> <span class="s1">&#39;queries_chain&#39;</span><span class="p">:</span>
+						<span class="n">update_insight</span><span class="o">.</span><span class="n">queries_chain</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">metricValue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;totalValue&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">))</span>	
+					<span class="k">elif</span> <span class="n">property_string</span> <span class="o">==</span> <span class="s1">&#39;views_maps&#39;</span><span class="p">:</span>
+						<span class="n">update_insight</span><span class="o">.</span><span class="n">views_map</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">metricValue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;totalValue&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">))</span>
+					<span class="k">elif</span> <span class="n">property_string</span> <span class="o">==</span> <span class="s1">&#39;views_search&#39;</span><span class="p">:</span>
+						<span class="n">update_insight</span><span class="o">.</span><span class="n">views_search</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">metricValue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;totalValue&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">))</span>
+					<span class="k">elif</span> <span class="n">property_string</span> <span class="o">==</span> <span class="s1">&#39;actions_website&#39;</span><span class="p">:</span>
+						<span class="n">update_insight</span><span class="o">.</span><span class="n">actions_website</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">metricValue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;totalValue&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">))</span>
+					<span class="k">elif</span> <span class="n">property_string</span> <span class="o">==</span> <span class="s1">&#39;actions_phone&#39;</span><span class="p">:</span>
+						<span class="n">update_insight</span><span class="o">.</span><span class="n">actions_phone</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">metricValue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;totalValue&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">))</span>	
+					<span class="k">elif</span> <span class="n">property_string</span> <span class="o">==</span> <span class="s1">&#39;actions_driving_directions&#39;</span><span class="p">:</span>
+						<span class="n">update_insight</span><span class="o">.</span><span class="n">actions_driving_directions</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">metricValue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;totalValue&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">))</span>	
+					<span class="k">elif</span> <span class="n">property_string</span> <span class="o">==</span> <span class="s1">&#39;photos_views_merchant&#39;</span><span class="p">:</span>
+						<span class="n">update_insight</span><span class="o">.</span><span class="n">photos_views_merchant</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">metricValue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;totalValue&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">))</span>
+					<span class="k">elif</span> <span class="n">property_string</span> <span class="o">==</span> <span class="s1">&#39;photos_views_customers&#39;</span><span class="p">:</span>
+						<span class="n">update_insight</span><span class="o">.</span><span class="n">photos_views_customers</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">metricValue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;totalValue&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">))</span>
+					<span class="k">elif</span> <span class="n">property_string</span> <span class="o">==</span> <span class="s1">&#39;photos_count_merchant&#39;</span><span class="p">:</span>
+						<span class="n">update_insight</span><span class="o">.</span><span class="n">photos_count_merchant</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">metricValue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;totalValue&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">))</span>
+					<span class="k">elif</span> <span class="n">property_string</span> <span class="o">==</span> <span class="s1">&#39;photos_count_customers&#39;</span><span class="p">:</span>
+						<span class="n">update_insight</span><span class="o">.</span><span class="n">photos_count_customers</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">metricValue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;totalValue&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">))</span>
+					<span class="k">elif</span> <span class="n">property_string</span> <span class="o">==</span> <span class="s1">&#39;local_post_views_search&#39;</span><span class="p">:</span>
+						<span class="n">update_insight</span><span class="o">.</span><span class="n">local_post_views_search</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">metricValue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;totalValue&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">))</span>
+			<span class="n">insight_key</span> <span class="o">=</span> <span class="n">update_insight</span><span class="o">.</span><span class="n">put</span><span class="p">()</span>
+			<span class="k">return</span> <span class="n">insight_key</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-28'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-28'>#</a>
+      </div>
+      <p>check if denominator is not zero</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-29'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-29'>#</a>
+      </div>
+      <p>return change in seaarches for two different period</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-30'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-30'>#</a>
+      </div>
+      <p>check if divide by zero</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-31'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-31'>#</a>
+      </div>
+      <p>fetch specific location insights between start/end date</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-32'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-32'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-33'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-33'>#</a>
+      </div>
+      <p>return graph data {&lsquo;dates&rsquo;:list,&rsquo;direct&rsquo;:list,&rsquo;indirect&rsquo;:list,</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-34'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-34'>#</a>
+      </div>
+      <pre><code>    'phone':list,'website':list,'direction':list,
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-35'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-35'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-36'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-36'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-37'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-37'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

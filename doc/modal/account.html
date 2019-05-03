@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>account.py</title>
+  <link rel="stylesheet" href="../pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>account.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">google.appengine.ext</span> <span class="kn">import</span> <span class="n">ndb</span>
+<span class="kn">from</span> <span class="nn">registered</span> <span class="kn">import</span> <span class="n">Registered</span>
+<span class="kn">import</span> <span class="nn">os</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>ndb modal to maintain GBL Accounts</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">Account</span><span class="p">(</span><span class="n">ndb</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <pre><code>after succesful connection with GBL, accounts are fetched
+stored and manage all google busniess listing accounts
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">name</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+	<span class="n">registred_to</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">KeyProperty</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="n">Registered</span><span class="p">)</span>
+	<span class="n">account_id</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+	<span class="n">typ</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+	<span class="n">status</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+	<span class="n">connected</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">BooleanProperty</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+	<span class="n">locations_connected</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">BooleanProperty</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+	<span class="n">date</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">DateTimeProperty</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>class methods start
+insert/create new account,checks if account already exist then return the key else insert</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">account_id</span><span class="p">,</span><span class="n">typ</span><span class="p">,</span><span class="n">status</span><span class="p">,</span><span class="n">registred_to_key</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">account_key</span> <span class="o">=</span> <span class="n">Account</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Account</span><span class="o">.</span><span class="n">account_id</span> <span class="o">==</span> <span class="n">account_id</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">keys_only</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">account_key</span><span class="p">:</span>
+			<span class="n">account</span> <span class="o">=</span> <span class="n">Account</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span><span class="n">account_id</span><span class="o">=</span><span class="n">account_id</span><span class="p">,</span><span class="n">typ</span><span class="o">=</span><span class="n">typ</span><span class="p">,</span><span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span><span class="n">registred_to</span><span class="o">=</span><span class="n">registred_to_key</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">account</span><span class="o">.</span><span class="n">put</span><span class="p">()</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">account_key</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>get active/connected account keys</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">get_account_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">registred_to_key</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="k">return</span> <span class="n">Account</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">ndb</span><span class="o">.</span><span class="n">AND</span><span class="p">(</span><span class="n">Account</span><span class="o">.</span><span class="n">registred_to</span> <span class="o">==</span> <span class="n">registred_to_key</span><span class="p">,</span><span class="n">Account</span><span class="o">.</span><span class="n">connected</span> <span class="o">==</span> <span class="bp">True</span><span class="p">))</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">keys_only</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>get active/connected account entities</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">get_active_account</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">registred_to_key</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="k">return</span> <span class="n">Account</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">ndb</span><span class="o">.</span><span class="n">AND</span><span class="p">(</span><span class="n">Account</span><span class="o">.</span><span class="n">registred_to</span> <span class="o">==</span> <span class="n">registred_to_key</span><span class="p">,</span><span class="n">Account</span><span class="o">.</span><span class="n">connected</span> <span class="o">==</span> <span class="bp">True</span><span class="p">))</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>return account list for list of keys</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">get_account_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">account_keys</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="k">if</span> <span class="n">account_keys</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">Account</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Account</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">IN</span><span class="p">(</span><span class="n">account_keys</span><span class="p">))</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">Account</span><span class="o">.</span><span class="n">query</span><span class="p">()</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>update connection flag for specific account</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">updateConnectStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">account_key</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">account_key</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">Key</span><span class="p">(</span><span class="n">urlsafe</span> <span class="o">=</span> <span class="n">account_key</span><span class="p">)</span>
+		<span class="n">account</span> <span class="o">=</span> <span class="n">account_key</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+		<span class="n">account</span><span class="o">.</span><span class="n">connected</span> <span class="o">=</span>  <span class="bp">True</span>
+		<span class="k">return</span> <span class="n">account</span><span class="o">.</span><span class="n">put</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>create new entity and insert account</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">gbl_id_key</span><span class="p">,</span><span class="n">accounts</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">new_accounts</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">account</span> <span class="ow">in</span> <span class="n">accounts</span><span class="p">:</span>
+			<span class="n">account_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">account</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;accountName&#39;</span><span class="p">),</span><span class="n">account</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">),</span><span class="n">account</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">),</span><span class="n">account</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;state&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">),</span><span class="n">gbl_id_key</span><span class="p">)</span>
+			<span class="n">new_accounts</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+				<span class="s1">&#39;account_id&#39;</span><span class="p">:</span><span class="n">account</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">),</span>\
+				<span class="s1">&#39;key&#39;</span><span class="p">:</span><span class="n">account_key</span><span class="o">.</span><span class="n">urlsafe</span><span class="p">(),</span>\
+				<span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="n">account</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;accountName&#39;</span><span class="p">),</span>\
+				<span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="n">account</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">),</span>\
+				<span class="s1">&#39;status&#39;</span><span class="p">:</span><span class="n">account</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;state&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">)</span>
+			<span class="p">})</span>
+		<span class="k">return</span> <span class="n">new_accounts</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>script to generate dummy accounts</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">insert_demo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">gbl_id_key</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">account_ids_and_keys</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">demo</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">):</span>
+			<span class="n">account_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;obbserv-demo-account-{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">demo</span><span class="p">),</span><span class="s1">&#39;accounts/demo/{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">demo</span><span class="p">),</span><span class="s1">&#39;DUMMY&#39;</span><span class="p">,</span><span class="s1">&#39;DEMO&#39;</span><span class="p">,</span><span class="n">gbl_id_key</span><span class="p">)</span>
+			<span class="n">account_ids_and_keys</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;accounts/demo/{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">demo</span><span class="p">),</span><span class="n">account_key</span><span class="p">))</span>
+		<span class="k">return</span> <span class="n">account_ids_and_keys</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <p>delete selected account</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">account_key</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="k">pass</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      <p>class methods end</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

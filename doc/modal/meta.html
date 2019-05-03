@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>meta.py</title>
+  <link rel="stylesheet" href="../pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>meta.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">google.appengine.ext</span> <span class="kn">import</span> <span class="n">ndb</span>
+<span class="kn">from</span> <span class="nn">location</span> <span class="kn">import</span> <span class="n">Location</span>
+<span class="kn">import</span> <span class="nn">logging</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>category class manage and store categories</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">Category</span><span class="p">(</span><span class="n">ndb</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">displayName</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+	<span class="n">categoryId</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>insert new category if already not exist</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">displayName</span><span class="p">,</span><span class="n">categoryId</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">category_key</span> <span class="o">=</span> <span class="n">Category</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Category</span><span class="o">.</span><span class="n">categoryId</span> <span class="o">==</span> <span class="n">categoryId</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">keys_only</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">category_key</span><span class="p">:</span>
+			<span class="n">category</span> <span class="o">=</span> <span class="n">Category</span><span class="p">(</span><span class="n">displayName</span><span class="o">=</span><span class="n">displayName</span><span class="p">,</span><span class="n">categoryId</span><span class="o">=</span><span class="n">categoryId</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">category</span><span class="o">.</span><span class="n">put</span><span class="p">()</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">category_key</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>return list of category</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">get_categorys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">category_keys</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">categorys</span> <span class="o">=</span> <span class="n">Category</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Category</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">IN</span><span class="p">(</span><span class="n">category_keys</span><span class="p">))</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span>
+		<span class="n">display_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">category</span><span class="o">.</span><span class="n">displayName</span> <span class="k">for</span> <span class="n">category</span> <span class="ow">in</span> <span class="n">categorys</span><span class="p">]</span>
+		<span class="k">return</span> <span class="n">display_names</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>store meta data for location</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">Meta</span><span class="p">(</span><span class="n">ndb</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">location</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">KeyProperty</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="n">Location</span><span class="p">)</span>
+	<span class="n">categorys</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">KeyProperty</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="n">Category</span><span class="p">,</span><span class="n">repeated</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">mapsUrl</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+	<span class="n">newReviewUrl</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">()</span>
+	<span class="n">labels</span> <span class="o">=</span> <span class="n">ndb</span><span class="o">.</span><span class="n">StringProperty</span><span class="p">(</span><span class="n">repeated</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>insert meta data for location if not present</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">location</span><span class="p">,</span><span class="n">mapsUrl</span><span class="p">,</span><span class="n">newReviewUrl</span><span class="p">,</span><span class="n">labels</span><span class="p">,</span><span class="n">primaryCategory</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">additionalCategories</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">meta_key</span> <span class="o">=</span> <span class="n">Meta</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Meta</span><span class="o">.</span><span class="n">location</span> <span class="o">==</span> <span class="n">location</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">keys_only</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">meta_key</span><span class="p">:</span>
+			<span class="n">categorys</span> <span class="o">=</span> <span class="p">[]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>insert primary catogries</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>			<span class="k">if</span> <span class="n">primaryCategory</span><span class="p">:</span>
+				<span class="n">categorys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Category</span><span class="p">()</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">primaryCategory</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;displayName&#39;</span><span class="p">),</span><span class="n">primaryCategory</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;categoryId&#39;</span><span class="p">)))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      <p>insert additionalCategories list</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>			<span class="k">if</span> <span class="n">additionalCategories</span><span class="p">:</span>
+				<span class="k">for</span> <span class="n">additionalCategorie</span> <span class="ow">in</span> <span class="n">additionalCategories</span><span class="p">:</span>
+					<span class="n">categorys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Category</span><span class="p">()</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">additionalCategorie</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;displayName&#39;</span><span class="p">),</span><span class="n">additionalCategorie</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;categoryId&#39;</span><span class="p">)))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>checking if location lables are present
+else setting it to []</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>			<span class="k">if</span> <span class="ow">not</span> <span class="n">labels</span><span class="p">:</span>
+				<span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      <p>insert Meta data for location</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>			<span class="n">meta</span>  <span class="o">=</span> <span class="n">Meta</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span><span class="n">mapsUrl</span><span class="o">=</span><span class="n">mapsUrl</span><span class="p">,</span><span class="n">newReviewUrl</span><span class="o">=</span><span class="n">newReviewUrl</span><span class="p">,</span><span class="n">categorys</span><span class="o">=</span><span class="n">categorys</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">meta</span><span class="o">.</span><span class="n">put</span><span class="p">()</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">meta_key</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>return map url and labels</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">get_labels_and_mapUrl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">location</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">meta</span> <span class="o">=</span> <span class="n">Meta</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Meta</span><span class="o">.</span><span class="n">location</span> <span class="o">==</span> <span class="n">location</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+		<span class="k">return</span> <span class="p">{</span>
+			<span class="s1">&#39;labels&#39;</span><span class="p">:</span><span class="n">meta</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>
+			<span class="s1">&#39;map_url&#39;</span><span class="p">:</span><span class="n">meta</span><span class="o">.</span><span class="n">mapsUrl</span>
+		<span class="p">}</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <p>return list of categorys connected to locations</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">get_details</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">location</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">meta</span> <span class="o">=</span> <span class="n">Meta</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Meta</span><span class="o">.</span><span class="n">location</span> <span class="o">==</span> <span class="n">location</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+		<span class="k">return</span> <span class="n">meta</span><span class="o">.</span><span class="n">categorys</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

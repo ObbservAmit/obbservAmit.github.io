@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>fetch.py</title>
+  <link rel="stylesheet" href="../../pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>fetch.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>module to handle all outbound http request
+fetch gbl accounts , locations and insights</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>app engine imports</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">google.appengine.api</span> <span class="kn">import</span> <span class="n">urlfetch</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">httplib2</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">oauth2client.client</span> <span class="kn">import</span> <span class="n">OAuth2Credentials</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>const endpoint url</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="n">gmb_api_version</span> <span class="o">=</span> <span class="s1">&#39;https://mybusiness.googleapis.com/v4&#39;</span><span class="p">;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>class to handle all outbound https calls</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">FetchGbl</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="n">headers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+	<span class="n">start_date</span> <span class="o">=</span> <span class="bp">None</span>
+	<span class="n">end_date</span> <span class="o">=</span> <span class="bp">None</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">creds</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>constructor function
+inti request headers</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="bp">self</span><span class="o">.</span><span class="n">refresh_access_token</span><span class="p">(</span><span class="n">creds</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">set_end_date</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">set_start_date</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>create and run http request</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">https_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">path</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="k">try</span><span class="p">:</span>
+			<span class="n">result</span> <span class="o">=</span> <span class="n">urlfetch</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span>
+				<span class="n">url</span><span class="o">=</span><span class="s1">&#39;{}/{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gmb_api_version</span><span class="p">,</span><span class="n">path</span><span class="p">),</span>
+				<span class="n">method</span><span class="o">=</span><span class="n">urlfetch</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span>
+				<span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
+			<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+			<span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span> <span class="ow">and</span> <span class="s1">&#39;locations&#39;</span> <span class="ow">or</span> <span class="s1">&#39;accounts&#39;</span> <span class="ow">in</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">content</span><span class="p">):</span>
+				<span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="k">return</span> <span class="bp">None</span>
+		<span class="k">except</span> <span class="n">urlfetch</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+			<span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Caught exception fetching url&#39;</span><span class="p">)</span>
+			<span class="k">return</span> <span class="bp">None</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>methd to refresh user access token</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">refresh_access_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">creds</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      <p>refresh access token</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">credentials</span> <span class="o">=</span> <span class="n">OAuth2Credentials</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">creds</span><span class="p">))</span>
+		<span class="n">credentials</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">httplib2</span><span class="o">.</span><span class="n">Http</span><span class="p">())</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">update_headers</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">credentials</span><span class="o">.</span><span class="n">to_json</span><span class="p">())</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;access_token&#39;</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>update header for http request</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">update_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">accessToken</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      <p>update request headers</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">accessToken</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">,</span><span class="s1">&#39;Authorization&#39;</span><span class="p">:</span><span class="s1">&#39;Bearer {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">accessToken</span><span class="p">)})</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>run http request to fetch user gbl conncetd accoints</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">get_connected_accounts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      <p>get connected accounts</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">https_request</span><span class="p">(</span><span class="s1">&#39;accounts/&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>run http request to fetch location cnnected with gbl connected account using</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">get_connected_locations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">account_id</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      <pre><code>        account id
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">https_request</span><span class="p">(</span><span class="s1">&#39;{}/locations&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">account_id</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <p>fetch AGGREGATED_TOTAL location insight</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">get_aggregated_insights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">location_id</span><span class="p">,</span><span class="n">account_id</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      <pre><code>        for specific location =&gt; loation_id
+        and account = &gt; account_id
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="k">try</span><span class="p">:</span>
+			<span class="n">result</span> <span class="o">=</span> <span class="n">urlfetch</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span>
+				<span class="n">url</span><span class="o">=</span><span class="s1">&#39;{}/{}/locations:reportInsights&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gmb_api_version</span><span class="p">,</span><span class="n">account_id</span><span class="p">),</span>
+				<span class="n">payload</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+                    <span class="s2">&quot;locationNames&quot;</span><span class="p">:[</span><span class="n">location_id</span><span class="p">],</span>
+                    <span class="s2">&quot;basicRequest&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;metricRequests&quot;</span><span class="p">:</span> <span class="p">[{</span>
+                            <span class="s1">&#39;metric&#39;</span><span class="p">:</span> <span class="s1">&#39;ALL&#39;</span><span class="p">,</span>
+                            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">[</span>
+                               <span class="s1">&#39;AGGREGATED_TOTAL&#39;</span>
+                            <span class="p">]</span>
+                        <span class="p">}],</span>
+						<span class="s2">&quot;timeRange&quot;</span><span class="p">:</span> <span class="p">{</span> 
+                            <span class="s2">&quot;startTime&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span>
+                            <span class="s2">&quot;endTime&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_date</span><span class="p">,</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+				<span class="p">}),</span>
+				<span class="n">method</span><span class="o">=</span><span class="n">urlfetch</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span>
+				<span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
+			<span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span> <span class="ow">and</span> <span class="s1">&#39;locationMetrics&#39;</span> <span class="ow">in</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">content</span><span class="p">):</span>
+				<span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">content</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;locationMetrics&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="k">return</span> <span class="bp">None</span>
+		<span class="k">except</span> <span class="n">urlfetch</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+			<span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Caught exception fetching url&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      <p>method to fetch location insights for last 60 days</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">get_aggregated_insights_last_60_days</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">location_id</span><span class="p">,</span><span class="n">account_id</span><span class="p">,</span><span class="n">day</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-20'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-20'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-21'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-21'>#</a>
+      </div>
+      <p>init start date</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="bp">self</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">day</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">start_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T00:00:00Z&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-22'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-22'>#</a>
+      </div>
+      <p>end date</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="bp">self</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">day</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T00:00:00Z&quot;</span><span class="p">)</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">result</span> <span class="o">=</span> <span class="n">urlfetch</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span>
+				<span class="n">url</span><span class="o">=</span><span class="s1">&#39;{}/{}/locations:reportInsights&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gmb_api_version</span><span class="p">,</span><span class="n">account_id</span><span class="p">),</span>
+				<span class="n">payload</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+                    <span class="s2">&quot;locationNames&quot;</span><span class="p">:[</span><span class="n">location_id</span><span class="p">],</span>
+                    <span class="s2">&quot;basicRequest&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;metricRequests&quot;</span><span class="p">:</span> <span class="p">[{</span>
+                            <span class="s1">&#39;metric&#39;</span><span class="p">:</span> <span class="s1">&#39;ALL&#39;</span><span class="p">,</span>
+                            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">[</span>
+                               <span class="s1">&#39;AGGREGATED_TOTAL&#39;</span>
+                            <span class="p">]</span>
+                        <span class="p">}],</span>
+						<span class="s2">&quot;timeRange&quot;</span><span class="p">:</span> <span class="p">{</span> 
+                            <span class="s2">&quot;startTime&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span>
+                            <span class="s2">&quot;endTime&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_date</span><span class="p">,</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+				<span class="p">}),</span>
+				<span class="n">method</span><span class="o">=</span><span class="n">urlfetch</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span>
+				<span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
+			<span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span> <span class="ow">and</span> <span class="s1">&#39;locationMetrics&#39;</span> <span class="ow">in</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">content</span><span class="p">):</span>
+				<span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">content</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;locationMetrics&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="k">return</span> <span class="bp">None</span>
+		<span class="k">except</span> <span class="n">urlfetch</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+			<span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Caught exception fetching url&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-23'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-23'>#</a>
+      </div>
+      <p>init start date</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">set_start_date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-24'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-24'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="bp">self</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">start_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T00:00:00Z&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-25'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-25'>#</a>
+      </div>
+      <p>init end date</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="k">def</span> <span class="nf">set_end_date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-26'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-26'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>		<span class="bp">self</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T00:00:00Z&quot;</span><span class="p">)</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>
